@@ -1339,3 +1339,13 @@ footer a:hover {
     }
 
 }
+.education-description {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e1e9ef;
+
+    color: #65778a;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
