@@ -342,3 +342,76 @@ document.addEventListener(
 
     }
 );
+
+/* =========================
+   VINITX AI CHAT WIDGET
+========================= */
+(function initVinitxWidget() {
+    const launcher = document.getElementById("vinitxLauncher");
+    const panel = document.getElementById("vinitxChatPanel");
+    const closeButton = document.getElementById("vinitxClose");
+    const form = document.getElementById("vinitxChatForm");
+    const input = document.getElementById("vinitxUserInput");
+    const messages = document.getElementById("vinitxMessages");
+
+    if (!launcher || !panel || !closeButton || !form || !input || !messages) return;
+
+    function setOpen(isOpen) {
+        panel.classList.toggle("is-open", isOpen);
+        panel.setAttribute("aria-hidden", String(!isOpen));
+        launcher.setAttribute("aria-expanded", String(isOpen));
+        launcher.setAttribute("aria-label", isOpen ? "Close VINITX AI chat" : "Open VINITX AI chat");
+        if (isOpen) input.focus();
+        else launcher.focus();
+    }
+
+    function addMessage(text, type) {
+        const bubble = document.createElement("div");
+        bubble.className = "vinitx-message " + (type === "user" ? "vinitx-message-user" : "vinitx-message-bot");
+        bubble.textContent = text;
+        messages.appendChild(bubble);
+        messages.scrollTop = messages.scrollHeight;
+        return bubble;
+    }
+
+    function getLocalReply(question) {
+        const q = question.toLowerCase();
+        if (/\b(hi|hello|hey|namaste)\b/.test(q)) {
+            return "Hi! 👋 I'm VINITX AI, the portfolio assistant. Ask me about Vinit's education, skills, or projects.";
+        }
+        if (/\b(skill|tech|language|programming)\b/.test(q)) {
+            return "Vinit's portfolio lists Python, HTML, CSS, JavaScript, Java, and OOP as learning skills.";
+        }
+        if (/\b(education|college|degree|b\.tech|university)\b/.test(q)) {
+            return "Vinit's portfolio says he is pursuing a B.Tech and lists Sanskriti University, Mathura.";
+        }
+        if (/\b(project|vinitx|chatbot|ai)\b/.test(q)) {
+            return "VINITX AI is Vinit's AI assistant project. Its live AI connection needs the chatbot's deployed API/backend URL; this portfolio widget is currently in demo mode.";
+        }
+        if (/\b(certificate|certification)\b/.test(q)) {
+            return "You can view Vinit's certificates in the Certificates section of this portfolio.";
+        }
+        if (/\b(contact|email|phone|reach)\b/.test(q)) {
+            return "You can reach Vinit using the contact details shown in the Contact section of this portfolio.";
+        }
+        return "Thanks for your question! I'm currently in demo mode, so I can answer a few portfolio-related questions. To answer general questions with the full VINITX AI, its deployed backend/API must be connected.";
+    }
+
+    launcher.addEventListener("click", function () {
+        setOpen(!panel.classList.contains("is-open"));
+    });
+    closeButton.addEventListener("click", function () {
+        setOpen(false);
+    });
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && panel.classList.contains("is-open")) setOpen(false);
+    });
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const question = input.value.trim();
+        if (!question) return;
+        addMessage(question, "user");
+        input.value = "";
+        addMessage(getLocalReply(question), "bot");
+    });
+})();

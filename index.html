@@ -906,6 +906,43 @@
 
 
 
+
+<!-- ================= VINITX AI CHAT WIDGET ================= -->
+<div class="vinitx-widget">
+    <section class="vinitx-chat-panel" id="vinitxChatPanel" aria-labelledby="vinitxChatTitle" aria-hidden="true">
+        <header class="vinitx-chat-header">
+            <div class="vinitx-brand-mark" aria-hidden="true">VX</div>
+            <div class="vinitx-brand-copy">
+                <h2 id="vinitxChatTitle">VINITX AI</h2>
+                <p><span class="vinitx-status-dot"></span> Portfolio assistant</p>
+            </div>
+            <button type="button" class="vinitx-close" id="vinitxClose" aria-label="Close VINITX AI chat">×</button>
+        </header>
+        <div class="vinitx-chat-messages" id="vinitxMessages" role="log" aria-live="polite">
+            <div class="vinitx-message vinitx-message-bot">
+                Hi! 👋 I'm VINITX AI. Ask me about Vinit's skills, education, projects, or this portfolio.
+            </div>
+            <p class="vinitx-chat-note">Demo mode: connect your AI backend to enable live AI replies.</p>
+        </div>
+        <form class="vinitx-chat-form" id="vinitxChatForm">
+            <label class="vinitx-sr-only" for="vinitxUserInput">Message VINITX AI</label>
+            <input id="vinitxUserInput" type="text" maxlength="1000" placeholder="Ask me something..." autocomplete="off" required>
+            <button type="submit" aria-label="Send message">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.4 20.2 22 12 3.4 3.8 3 10.2l12.4 1.8L3 13.8z" fill="currentColor"/></svg>
+            </button>
+        </form>
+    </section>
+    <button type="button" class="vinitx-launcher" id="vinitxLauncher" aria-label="Open VINITX AI chat" aria-controls="vinitxChatPanel" aria-expanded="false">
+        <span class="vinitx-launcher-glow"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3.2c-5 0-9 3.5-9 7.9 0 2.1.9 4 2.5 5.4L4.4 20l4.1-1.6c1.1.4 2.3.6 3.5.6 5 0 9-3.5 9-7.9s-4-7.9-9-7.9Zm-4 9.5a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z" fill="currentColor"/>
+        </svg>
+        <span class="vinitx-launcher-label">Ask VINITX AI</span>
+    </button>
+</div>
+<!-- ================= END VINITX AI CHAT WIDGET ================= -->
+
+
 <!-- ================= FOOTER ================= -->
 
 <footer>
