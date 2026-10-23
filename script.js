@@ -398,11 +398,15 @@ document.addEventListener(
         sendButton.setAttribute("aria-label", "VINITX AI is replying");
         const loadingBubble = addMessage("VINITX AI सोच रहा है…", "bot");
 
+        const controller = new AbortController();
+        const requestTimeout = setTimeout(() => controller.abort(), 30000);
+
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: question })
+                body: JSON.stringify({ message: question }),
+                signal: controller.signal
             });
 
             let data = {};
@@ -419,11 +423,14 @@ document.addEventListener(
             loadingBubble.textContent = data.reply || data.error || "माफ़ कीजिए, जवाब नहीं मिल पाया।";
         } catch (error) {
             console.error("VINITX AI chat error:", error);
-            loadingBubble.textContent = error.name === "TypeError"
-                ? "VINITX AI से connection नहीं हो पाया। कृपया कुछ देर बाद फिर कोशिश करें।"
-                : (error.message || "अभी जवाब नहीं मिल पाया। कृपया फिर कोशिश करें।");
+            loadingBubble.textContent = error.name === "AbortError"
+                ? "जवाब आने में 30 सेकंड से ज़्यादा लग गए। Backend status जाँचकर फिर कोशिश करें।"
+                : error.name === "TypeError"
+                    ? "VINITX AI से connection नहीं हो पाया। Backend/CORS जाँचकर फिर कोशिश करें।"
+                    : (error.message || "अभी जवाब नहीं मिल पाया। कृपया फिर कोशिश करें।");
             loadingBubble.classList.add("vinitx-message-error");
         } finally {
+            clearTimeout(requestTimeout);
             input.disabled = false;
             sendButton.disabled = false;
             sendButton.setAttribute("aria-label", "Send message");
