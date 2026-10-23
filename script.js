@@ -355,6 +355,26 @@ document.addEventListener(
     const input = document.getElementById("vinitxUserInput");
     const sendButton = form ? form.querySelector('button[type="submit"]') : null;
     const messages = document.getElementById("vinitxMessages");
+    const MEMORY_KEY = "vinitx-portfolio-chat-memory-v1";
+    let chatHistory = [];
+    try {
+        const saved = JSON.parse(localStorage.getItem(MEMORY_KEY) || "[]");
+        if (Array.isArray(saved)) {
+            chatHistory = saved.filter(item => item &&
+                (item.role === "user" || item.role === "model") &&
+                typeof item.text === "string").slice(-20);
+        }
+    } catch (_) {
+        chatHistory = [];
+    }
+
+    function saveChatHistory() {
+        try {
+            localStorage.setItem(MEMORY_KEY, JSON.stringify(chatHistory.slice(-20)));
+        } catch (error) {
+            console.warn("Could not save VINITX AI chat memory:", error);
+        }
+    }
 
     if (!launcher || !panel || !closeButton || !form || !input || !sendButton || !messages) return;
 
@@ -375,6 +395,12 @@ document.addEventListener(
         messages.scrollTop = messages.scrollHeight;
         return bubble;
     }
+
+    const chatNote = messages.querySelector(".vinitx-chat-note");
+    chatHistory.forEach(function (item) {
+        addMessage(item.text, item.role === "user" ? "user" : "bot");
+    });
+    if (chatNote) messages.appendChild(chatNote);
 
     launcher.addEventListener("click", function () {
         setOpen(!panel.classList.contains("is-open"));
@@ -405,7 +431,7 @@ document.addEventListener(
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: question }),
+                body: JSON.stringify({ message: question, history: chatHistory.slice(-12) }),
                 signal: controller.signal
             });
 
@@ -421,6 +447,14 @@ document.addEventListener(
             }
 
             loadingBubble.textContent = data.reply || data.error || "माफ़ कीजिए, जवाब नहीं मिल पाया।";
+            if (response.ok && data.reply) {
+                chatHistory.push(
+                    { role: "user", text: question },
+                    { role: "model", text: data.reply }
+                );
+                chatHistory = chatHistory.slice(-20);
+                saveChatHistory();
+            }
         } catch (error) {
             console.error("VINITX AI chat error:", error);
             loadingBubble.textContent = error.name === "AbortError"
